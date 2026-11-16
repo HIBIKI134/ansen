@@ -3,67 +3,115 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-      body { font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-      .login-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 300px; text-align: center; }
-      h2 { color: #333; margin-bottom: 20px; }
-      input { width: 90%; padding: 12px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; }
-      
-      /* ボタンとローディングのエリア */
-      .button-area { position: relative; height: 45px; }
-      button { width: 100%; padding: 12px; background-color: #1a73e8; color: white; border: none; border-radius: 0px; font-size: 16px; cursor: pointer; }
-      
-      /* くるくるアニメーションの作成 */
-      .loader {
-        display: none; /* 最初は隠しておく */
-        width: 25px; height: 25px;
-        border: 3px solid #f3f3f3; border-top: 3px solid #1a73e8;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-        margin: 0 auto;
+      body {
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        background-color: #f4f7f6;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
       }
-      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-      #msg { color: #d93025; font-size: 14px; margin-top: 15px; min-height: 20px; }
+      .waku {
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        width: 300px;
+        text-align: center;
+      }
+      h2 {
+        color: #333;
+        margin-bottom: 20px;
+      }
+      input {
+        width: 90%;
+        padding: 12px;
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 16px;
+        box-sizing: border-box;
+      }
+      .botan-area {
+        position: relative;
+        height: 45px;
+      }
+      button {
+        width: 100%;
+        padding: 12px;
+        background-color: #1a73e8;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #1557b0;
+      }
+      .guruguru {
+        display: none;
+        width: 25px;
+        height: 25px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #1a73e8;
+        border-radius: 50%;
+        animation: mawa-su 1s linear infinite;
+        margin: 10px auto 0;
+      }
+      @keyframes mawa-su {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      #bunshou {
+        color: #d93025;
+        font-size: 14px;
+        margin-top: 15px;
+        min-height: 20px;
+      }
     </style>
   </head>
   <body>
-    <div class="login-card">
-      <h2>認証用サイトテスト版</h2>
-      <input type="password" id="pass" placeholder="パスワードを入力" onkeypress="if(event.key==='Enter')login()">
+
+    <div class="waku">
+      <h2>テスト</h2>
+      <input type="password" id="nyuryoku" placeholder="パスワードを入力" autocomplete="new-password" onkeypress="if(event.key==='Enter')kakunin()">
       
-      <div class="button-area">
-        <button id="btn" onclick="login()">ログイン</button>
-        <div id="loader" class="loader"></div>
+      <div class="botan-area">
+        <button id="oshite" onclick="kakunin()">ログイン</button>
+        <div id="ugoki" class="guruguru"></div>
       </div>
       
-      <div id="msg"></div>
+      <div id="bunshou"></div>
     </div>
 
     <script>
-      function login() {
-        const pass = document.getElementById('pass').value;
-        const btn = document.getElementById('btn');
-        const loader = document.getElementById('loader');
-        const msg = document.getElementById('msg');
+      function kakunin() {
+        const pass = document.getElementById('nyuryoku').value;
+        const botan = document.getElementById('oshite');
+        const ugoki = document.getElementById('ugoki');
+        const moji = document.getElementById('bunshou');
 
-        // ボタンを消してローディングを表示
-        btn.style.display = 'none';
-        loader.style.display = 'block';
-        msg.innerText = "";
-        
-        google.script.run.withSuccessHandler(url => {
-          if (url === "error") {
-            // エラーならボタンを戻す
-            btn.style.display = 'block';
-            loader.style.display = 'none';
-            msg.innerText = "パスワードが正しくありません";
+        // ボタンを隠して、少しの間だけ待機中っぽく見せる
+        botan.style.display = 'none';
+        ugoki.style.display = 'block';
+        moji.innerText = "";
+
+        // パスワードのチェック
+        setTimeout(() => {
+          if (pass === "sinnbunngakaridesu947") {
+            moji.style.color = "#188038";
+            moji.innerText = "しばらくお待ち下さい...";
+            window.location.href = "https://google.com";
           } else {
-            msg.style.color = "#188038";
-            msg.innerText = "しばらくお待ち下さい...";
-            window.top.location.href = url;
+            botan.style.display = 'block';
+            ugoki.style.display = 'none';
+            moji.innerText = "パスワードが正しくありません";
           }
-        }).checkPassword(pass);
+        }, 600); // 0.6秒だけ待ち時間を演出
       }
     </script>
+
   </body>
 </html>
